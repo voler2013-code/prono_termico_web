@@ -2,6 +2,7 @@ const placeSelect = document.getElementById("placeSelect");
 const coordsFields = document.getElementById("coordsFields");
 const latInput = document.getElementById("latInput");
 const lonInput = document.getElementById("lonInput");
+const customDateInput = document.getElementById("customDateInput");
 const autoGround = document.getElementById("autoGround");
 const tdInput = document.getElementById("tdInput");
 const tInput = document.getElementById("tInput");
@@ -80,6 +81,23 @@ function selectedHours() {
     .sort((a, b) => a - b);
 }
 
+function localISODate(dateObj) {
+  const y = dateObj.getFullYear();
+  const m = String(dateObj.getMonth() + 1).padStart(2, "0");
+  const d = String(dateObj.getDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
+}
+
+function dateForPython(isoDate) {
+  const [y, m, d] = String(isoDate).split("-");
+  if (!y || !m || !d) return null;
+  return `${d}-${m}-${y}`;
+}
+
+// El calendario se usa para fechas específicas/futuras.
+// Ayer sigue disponible mediante el botón rápido.
+customDateInput.min = localISODate(new Date());
+
 function updateGenerateState() {
   generateBtn.disabled = !engineReady || busy;
 }
@@ -100,8 +118,25 @@ document.querySelectorAll(".date-btn").forEach((btn) => {
   btn.addEventListener("click", () => {
     document.querySelectorAll(".date-btn").forEach((b) => b.classList.remove("selected"));
     btn.classList.add("selected");
+    customDateInput.value = "";
+    customDateInput.classList.remove("selected-date");
     selectedDate = btn.dataset.date;
   });
+});
+
+customDateInput.addEventListener("change", () => {
+  if (!customDateInput.value) return;
+
+  const formatted = dateForPython(customDateInput.value);
+  if (!formatted) {
+    formError.textContent = "Elegí una fecha válida.";
+    return;
+  }
+
+  document.querySelectorAll(".date-btn").forEach((b) => b.classList.remove("selected"));
+  customDateInput.classList.add("selected-date");
+  selectedDate = formatted;
+  formError.textContent = "";
 });
 
 document.querySelectorAll(".hour-btn").forEach((btn) => {

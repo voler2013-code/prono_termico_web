@@ -127,6 +127,24 @@ input:disabled {
   gap: 8px;
 }
 
+.calendar-row {
+  display: grid;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+#customDateInput {
+  min-height: 46px;
+  cursor: pointer;
+}
+
+#customDateInput.selected-date {
+  border-color: var(--accent);
+  background: rgba(85, 194, 163, .18);
+  color: var(--accent-strong);
+  font-weight: 750;
+}
+
 .hours-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
