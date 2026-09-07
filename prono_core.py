@@ -44,7 +44,7 @@ TZ = "America/Argentina/Buenos_Aires"  # UTC-3 todo el año, sin horario de vera
 #
 # Se puede forzar un ancho distinto con una variable de entorno, por ejemplo:
 #   PRONO_ANCHO=60 python prono.py "sj; hoy; 15hs"
-ANCHO_SONDEO_DEFAULT = 50
+ANCHO_SONDEO_DEFAULT = 55
 
 # Compensación para Pydroid 3: su fuente monoespaciada ocupa más píxeles
 # horizontalmente que la de Telegram. Un valor menor comprime el eje X sin
