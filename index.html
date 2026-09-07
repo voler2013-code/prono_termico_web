@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#111827" />
+  <meta name="description" content="Pronóstico térmico y sondeo ASCII en el celular." />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="icons/icon-192.png" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <link rel="stylesheet" href="styles.css" />
+  <title>Prono Térmico</title>
+</head>
+<body>
+  <main class="app-shell">
+    <header class="app-header">
+      <div>
+        <h1>Prono Térmico</h1>
+        <p class="subtitle">Sondeo ASCII · Open-Meteo</p>
+      </div>
+      <span id="engineStatus" class="status-pill loading">Cargando motor…</span>
+    </header>
+
+    <section class="panel controls" aria-label="Controles del pronóstico">
+      <div class="field-group">
+        <label for="placeSelect">Lugar</label>
+        <select id="placeSelect">
+          <option value="sj" selected>SJ</option>
+          <option value="cuchi">Cuchi</option>
+          <option value="merlo">Merlo</option>
+          <option value="trasla">Trasla</option>
+          <option value="ped">Ped</option>
+          <option value="alpina">Alpina</option>
+          <option value="rioja">Rioja</option>
+          <option value="tuc">Tuc</option>
+          <option value="custom">Coordenadas personalizadas</option>
+        </select>
+      </div>
+
+      <div id="coordsFields" class="coords-grid hidden" aria-hidden="true">
+        <div class="field-group">
+          <label for="latInput">Latitud</label>
+          <input id="latInput" inputmode="decimal" placeholder="-31,32" autocomplete="off" />
+        </div>
+        <div class="field-group">
+          <label for="lonInput">Longitud</label>
+          <input id="lonInput" inputmode="decimal" placeholder="-64,34" autocomplete="off" />
+        </div>
+      </div>
+
+      <fieldset>
+        <legend>Fecha</legend>
+        <div class="segmented" id="dateButtons">
+          <button type="button" class="date-btn" data-date="ayer">Ayer</button>
+          <button type="button" class="date-btn selected" data-date="hoy">Hoy</button>
+          <button type="button" class="date-btn" data-date="mañana">Mañana</button>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Horarios</legend>
+        <div class="hours-grid" id="hourButtons">
+          <button type="button" class="hour-btn" data-hour="9">09</button>
+          <button type="button" class="hour-btn" data-hour="10">10</button>
+          <button type="button" class="hour-btn" data-hour="11">11</button>
+          <button type="button" class="hour-btn selected" data-hour="12">12</button>
+          <button type="button" class="hour-btn" data-hour="13">13</button>
+          <button type="button" class="hour-btn" data-hour="14">14</button>
+          <button type="button" class="hour-btn" data-hour="15">15</button>
+          <button type="button" class="hour-btn" data-hour="16">16</button>
+          <button type="button" class="hour-btn" data-hour="17">17</button>
+          <button type="button" class="hour-btn" data-hour="18">18</button>
+        </div>
+        <p class="hint">Podés marcar uno o varios horarios.</p>
+      </fieldset>
+
+      <fieldset>
+        <legend>Condiciones a nivel del suelo</legend>
+        <label class="check-row" for="autoGround">
+          <input id="autoGround" type="checkbox" checked />
+          <span>Automáticas</span>
+        </label>
+
+        <div class="ground-grid">
+          <div class="field-group compact">
+            <label for="tdInput">Td</label>
+            <input id="tdInput" inputmode="decimal" placeholder="°C" disabled autocomplete="off" />
+          </div>
+          <div class="field-group compact">
+            <label for="tInput">T</label>
+            <input id="tInput" inputmode="decimal" placeholder="°C" disabled autocomplete="off" />
+          </div>
+        </div>
+      </fieldset>
+
+      <button id="generateBtn" class="primary" type="button" disabled>GENERAR SONDEO</button>
+      <p id="formError" class="error" role="alert" aria-live="polite"></p>
+    </section>
+
+    <section class="panel terminal-panel" aria-label="Resultado">
+      <div class="terminal-toolbar">
+        <span>Resultado</span>
+        <button id="clearBtn" type="button" class="text-btn">Limpiar</button>
+      </div>
+      <pre id="output" class="terminal" tabindex="0">Cargando Python en el celular…</pre>
+    </section>
+  </main>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>

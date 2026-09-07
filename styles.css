@@ -1,0 +1,237 @@
+:root {
+  color-scheme: dark;
+  --bg: #0b1020;
+  --panel: #151c2f;
+  --panel-2: #1b253b;
+  --text: #f3f6fb;
+  --muted: #aab5c7;
+  --border: #33415f;
+  --accent: #55c2a3;
+  --accent-strong: #74ddbe;
+  --danger: #ff9d9d;
+  --terminal: #05070b;
+}
+
+* { box-sizing: border-box; }
+
+html, body { min-height: 100%; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+button, select, input { font: inherit; }
+
+button, select, input[type="checkbox"] { touch-action: manipulation; }
+
+.app-shell {
+  width: min(760px, 100%);
+  margin: 0 auto;
+  padding: max(14px, env(safe-area-inset-top)) 12px max(18px, env(safe-area-inset-bottom));
+}
+
+.app-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+h1 {
+  font-size: 1.45rem;
+  margin: 0;
+}
+
+.subtitle {
+  margin: 3px 0 0;
+  color: var(--muted);
+  font-size: .9rem;
+}
+
+.status-pill {
+  flex: 0 0 auto;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 6px 9px;
+  font-size: .76rem;
+  color: var(--muted);
+  background: var(--panel);
+}
+
+.status-pill.ready { color: var(--accent-strong); }
+.status-pill.error { color: var(--danger); }
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px;
+  margin-bottom: 12px;
+}
+
+.controls { display: grid; gap: 14px; }
+
+.field-group { display: grid; gap: 6px; }
+.field-group.compact { min-width: 0; }
+
+label, legend {
+  color: var(--muted);
+  font-size: .88rem;
+  font-weight: 650;
+}
+
+fieldset {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+
+legend { margin-bottom: 8px; }
+
+select, input {
+  width: 100%;
+  min-height: 44px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--panel-2);
+  color: var(--text);
+  padding: 9px 11px;
+  outline: none;
+}
+
+select:focus, input:focus, button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+input:disabled {
+  opacity: .48;
+}
+
+.coords-grid, .ground-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.hidden { display: none !important; }
+
+.segmented {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.hours-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+}
+
+.date-btn, .hour-btn {
+  min-height: 44px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--panel-2);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.date-btn.selected, .hour-btn.selected {
+  border-color: var(--accent);
+  background: rgba(85, 194, 163, .18);
+  color: var(--accent-strong);
+  font-weight: 750;
+}
+
+.hint {
+  color: var(--muted);
+  font-size: .8rem;
+  margin: 7px 0 0;
+}
+
+.check-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 38px;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.check-row input {
+  width: 20px;
+  height: 20px;
+  min-height: 0;
+  accent-color: var(--accent);
+}
+
+.primary {
+  min-height: 50px;
+  border: 0;
+  border-radius: 11px;
+  background: var(--accent);
+  color: #07100d;
+  font-weight: 850;
+  letter-spacing: .025em;
+  cursor: pointer;
+}
+
+.primary:disabled {
+  opacity: .45;
+  cursor: wait;
+}
+
+.error {
+  min-height: 1.1em;
+  margin: -5px 0 0;
+  color: var(--danger);
+  font-size: .86rem;
+}
+
+.terminal-panel { padding: 0; overflow: hidden; }
+
+.terminal-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--border);
+  color: var(--muted);
+  font-size: .82rem;
+}
+
+.text-btn {
+  border: 0;
+  background: transparent;
+  color: var(--accent-strong);
+  padding: 5px 8px;
+  cursor: pointer;
+}
+
+.terminal {
+  margin: 0;
+  width: 100%;
+  min-height: 250px;
+  max-height: 62vh;
+  overflow: auto;
+  padding: 12px 10px 18px;
+  background: var(--terminal);
+  color: #e7f4ec;
+  font-family: "Roboto Mono", "Courier New", monospace;
+  font-size: clamp(10px, 2.85vw, 13px);
+  line-height: 1.28;
+  white-space: pre;
+  tab-size: 4;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (min-width: 620px) {
+  .hours-grid { grid-template-columns: repeat(10, 1fr); }
+  .terminal { font-size: 13px; }
+}
