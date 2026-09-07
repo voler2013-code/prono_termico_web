@@ -94,9 +94,7 @@ function dateForPython(isoDate) {
   return `${d}-${m}-${y}`;
 }
 
-// El calendario se usa para fechas específicas/futuras.
-// Ayer sigue disponible mediante el botón rápido.
-customDateInput.min = localISODate(new Date());
+
 
 function updateGenerateState() {
   generateBtn.disabled = !engineReady || busy;
