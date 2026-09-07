@@ -1,4 +1,4 @@
-const CACHE_NAME = "prono-termico-v8";
+const CACHE_NAME = "prono-termico-v9";
 const APP_SHELL = [
   "./",
   "./index.html",
