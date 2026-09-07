@@ -44,7 +44,7 @@ TZ = "America/Argentina/Buenos_Aires"  # UTC-3 todo el año, sin horario de vera
 #
 # Se puede forzar un ancho distinto con una variable de entorno, por ejemplo:
 #   PRONO_ANCHO=60 python prono.py "sj; hoy; 15hs"
-ANCHO_SONDEO_DEFAULT = 80
+ANCHO_SONDEO_DEFAULT = 44
 
 # Compensación para Pydroid 3: su fuente monoespaciada ocupa más píxeles
 # horizontalmente que la de Telegram. Un valor menor comprime el eje X sin
@@ -587,31 +587,63 @@ def generar_sondeo(
     ancho_original = max(1, ancho_cuerpo * factor_comp)
 
     todas_x = [
-        x_td[h] for h in visibles if h in x_td
-    ] + [
-        x_t[h] for h in visibles if h in x_t
-    ]
+    # -------------------------------------------------------------
+    # Posicionamiento horizontal por prioridades:
+    #
+    # 1) Mantener visibles Td y T en la parte inferior del sondeo.
+    # 2) Mantener completa la curva de temperatura T.
+    # 3) Si Td no entra completa, se permite recortarla.
+    # -------------------------------------------------------------
+    margen_original = factor_comp
+    rango_disponible = ancho_original - 1
+    borde_derecho = rango_disponible - margen_original
 
-    if todas_x:
-        min_x = min(todas_x)
-        max_x = max(todas_x)
+    if visibles:
+        # Altura inferior que realmente aparece en el gráfico.
+        h_inferior = min(visibles)
 
-        # Dejamos una pequeña separación del borde izquierdo.
-        margen_original = factor_comp
+        # Las dos líneas deben verse en la parte baja.
+        base_min = min(x_td[h_inferior], x_t[h_inferior])
+        base_max = max(x_td[h_inferior], x_t[h_inferior])
 
-        # Rango disponible en coordenadas originales.
-        rango_disponible = ancho_original - 1
+        # Segunda prioridad: conservar TODA la temperatura.
+        t_min = min(x_t[h] for h in visibles)
+        t_max = max(x_t[h] for h in visibles)
 
-        if (max_x - min_x) <= rango_disponible - margen_original:
-            # Centramos el conjunto dentro del espacio disponible.
-            espacio_libre = rango_disponible - (max_x - min_x)
+        # Intervalo de desplazamientos que mantiene visibles
+        # las dos curvas en la parte inferior.
+        shift_base_min = margen_original - base_min
+        shift_base_max = borde_derecho - base_max
+
+        # Intervalo de desplazamientos que mantiene completa T.
+        shift_t_min = margen_original - t_min
+        shift_t_max = borde_derecho - t_max
+
+        # Intentamos cumplir simultáneamente las prioridades 1 y 2.
+        shift_min = max(shift_base_min, shift_t_min)
+        shift_max = min(shift_base_max, shift_t_max)
+
+        if shift_min <= shift_max:
+            # Entra la base completa y toda la temperatura.
             desplazamiento_global = (
-                -min_x + margen_original + espacio_libre // 2
-            )
+                shift_min + shift_max
+            ) // 2
+
         else:
-            # Si excepcionalmente no entra, lo pegamos al mínimo posible
-            # sin perder ninguno de los extremos.
-            desplazamiento_global = -min_x + margen_original
+            # No entra todo simultáneamente.
+            # PRIORIDAD ABSOLUTA: mantener visibles ambas líneas abajo.
+            #
+            # Elegimos dentro del rango permitido por la base el
+            # desplazamiento más cercano al ideal para la temperatura.
+            ideal_t = (
+                shift_t_min + shift_t_max
+            ) // 2
+
+            desplazamiento_global = max(
+                shift_base_min,
+                min(ideal_t, shift_base_max)
+            )
+
     else:
         desplazamiento_global = 0
 
