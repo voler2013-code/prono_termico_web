@@ -586,55 +586,48 @@ def generar_sondeo(
     ancho_cuerpo = max(1, ancho - prefijo_len)
     ancho_original = max(1, ancho_cuerpo * factor_comp)
 
-    todas_x = [
     # -------------------------------------------------------------
     # Posicionamiento horizontal por prioridades:
     #
-    # 1) Mantener visibles Td y T en la parte inferior del sondeo.
+    # 1) Mantener visibles Td y T en la parte inferior.
     # 2) Mantener completa la curva de temperatura T.
-    # 3) Si Td no entra completa, se permite recortarla.
+    # 3) Si Td no entra completa, permitir que se recorte.
     # -------------------------------------------------------------
     margen_original = factor_comp
     rango_disponible = ancho_original - 1
     borde_derecho = rango_disponible - margen_original
 
     if visibles:
-        # Altura inferior que realmente aparece en el gráfico.
+        # Altura inferior que realmente aparece en el gráfico
         h_inferior = min(visibles)
 
-        # Las dos líneas deben verse en la parte baja.
+        # Ambas curvas deben quedar visibles abajo
         base_min = min(x_td[h_inferior], x_t[h_inferior])
         base_max = max(x_td[h_inferior], x_t[h_inferior])
 
-        # Segunda prioridad: conservar TODA la temperatura.
+        # Mantener completa la curva de temperatura
         t_min = min(x_t[h] for h in visibles)
         t_max = max(x_t[h] for h in visibles)
 
-        # Intervalo de desplazamientos que mantiene visibles
-        # las dos curvas en la parte inferior.
+        # Desplazamientos que permiten mostrar ambas curvas abajo
         shift_base_min = margen_original - base_min
         shift_base_max = borde_derecho - base_max
 
-        # Intervalo de desplazamientos que mantiene completa T.
+        # Desplazamientos que permiten mostrar toda T
         shift_t_min = margen_original - t_min
         shift_t_max = borde_derecho - t_max
 
-        # Intentamos cumplir simultáneamente las prioridades 1 y 2.
+        # Buscar una posición que cumpla ambas prioridades
         shift_min = max(shift_base_min, shift_t_min)
         shift_max = min(shift_base_max, shift_t_max)
 
         if shift_min <= shift_max:
-            # Entra la base completa y toda la temperatura.
             desplazamiento_global = (
                 shift_min + shift_max
             ) // 2
-
         else:
-            # No entra todo simultáneamente.
-            # PRIORIDAD ABSOLUTA: mantener visibles ambas líneas abajo.
-            #
-            # Elegimos dentro del rango permitido por la base el
-            # desplazamiento más cercano al ideal para la temperatura.
+            # Si no se pueden cumplir ambas:
+            # prioridad a que Td y T sean visibles abajo
             ideal_t = (
                 shift_t_min + shift_t_max
             ) // 2
